@@ -11,9 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-/* ==========================================================================
-   1. MÁSCARA / TELEFONE
-   ========================================================================== */
+   // MÁSCARA / TELEFONE
 const phoneInput = document.getElementById('telefone');
 
 if (phoneInput) {
@@ -33,9 +31,9 @@ if (phoneInput) {
     });
 }
 
-/* ==========================================================================
-   2. VERIFICAÇÃO EM TEMPO REAL: ABERTO OU FECHADO
-   ========================================================================== */
+
+   //VERIFICAÇÃO EM TEMPO REAL: ABERTO OU FECHADO
+
 function initLiveStatus() {
     const statusContainer = document.getElementById('live-status');
     const statusText = document.getElementById('status-text');
@@ -43,7 +41,7 @@ function initLiveStatus() {
     if (!statusContainer || !statusText) return;
 
     const now = new Date();
-    const dayOfWeek = now.getDay(); // 0: Domingo, 1: Segunda...
+    const dayOfWeek = now.getDay(); // 0: Domingo, 1: Segunda
     const currentHour = now.getHours();
 
     // Horários da Barbearia: Seg a Sáb (1 a 6) das 09h às 20h
@@ -59,9 +57,7 @@ function initLiveStatus() {
     }
 }
 
-/* ==========================================================================
-   3. MENU MOBILE HAMBÚRGUER
-   ========================================================================== */
+   // MENU MOBILE HAMBÚRGUER
 function initMobileMenu() {
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
@@ -80,9 +76,8 @@ function initMobileMenu() {
     }
 }
 
-/* ==========================================================================
-   4. SELEÇÃO DIRETA DE SERVIÇO NA TABELA
-   ========================================================================== */
+//SELEÇÃO DIRETA DE SERVIÇO NA TABELA
+
 function selecionarServico(nomeServico) {
     const selectServico = document.getElementById('servico');
     if (!selectServico) return;
@@ -100,9 +95,8 @@ function selecionarServico(nomeServico) {
     }
 }
 
-/* ==========================================================================
-   5. DEFINIR DATA MÍNIMA COMO HOJE NO CAMPO DE DATA
-   ========================================================================== */
+//   DEFINIR DATA MÍNIMA COMO HOJE NO CAMPO DE DATA
+   
 function initMinDate() {
     const dateInput = document.getElementById('data');
     if (dateInput) {
@@ -111,9 +105,8 @@ function initMinDate() {
     }
 }
 
-/* ==========================================================================
-   6. PROCESSAMENTO DO AGENDAMENTO E MODAL
-   ========================================================================== */
+   //PROCESSAMENTO DO AGENDAMENTO E MODAL
+    
 async function processarAgendamento(e) {
     e.preventDefault();
 
@@ -134,7 +127,7 @@ async function processarAgendamento(e) {
     btnSubmit.disabled = true;
 
     try {
-        // 1. Fazendo o INSERT no banco de dados Supabase
+        // INSERT no banco de dados Supabase
         const { data, error } = await supabaseClient
             .from('agendamentos')
             .insert([
@@ -178,6 +171,20 @@ async function processarAgendamento(e) {
 
     document.getElementById('bookingModal').classList.add('active');
 
+function fecharModal() {
+    document.getElementById('bookingModal').classList.remove('active');
+}
+
+// Fechar modal ao clicar fora do conteúdo
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('bookingModal');
+    if (e.target === modal) {
+        fecharModal();
+    }
+});
+
+
+
     } catch (error) {
         console.error('Erro ao salvar no Supabase:', error);
         alert('Ocorreu um erro ao salvar seu agendamento no banco de dados. Tente novamente.');
@@ -201,18 +208,5 @@ async function processarAgendamento(e) {
     //const whatsappUrl = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(textoMsg)}`;
     //document.getElementById('whatsappLink').href = whatsappUrl;
 
-    // Exibe o modal
-    //document.getElementById('bookingModal').classList.add('active');
-//}
 
-//function fecharModal() {
-//    document.getElementById('bookingModal').classList.remove('active');
-//}
 
-// Fechar modal ao clicar fora do conteúdo
-//window.addEventListener('click', (e) => {
-//    const modal = document.getElementById('bookingModal');
-//    if (e.target === modal) {
-//        fecharModal();
-//    }
-//});
