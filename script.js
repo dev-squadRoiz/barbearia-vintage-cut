@@ -10,8 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMinDate();
 });
 
-
-   // MÁSCARA / TELEFONE
+// MÁSCARA / TELEFONE
 const phoneInput = document.getElementById('telefone');
 
 if (phoneInput) {
@@ -31,9 +30,7 @@ if (phoneInput) {
     });
 }
 
-
-   //VERIFICAÇÃO EM TEMPO REAL: ABERTO OU FECHADO
-
+//VERIFICAÇÃO EM TEMPO REAL: ABERTO OU FECHADO
 function initLiveStatus() {
     const statusContainer = document.getElementById('live-status');
     const statusText = document.getElementById('status-text');
@@ -57,7 +54,7 @@ function initLiveStatus() {
     }
 }
 
-   // MENU MOBILE HAMBÚRGUER
+// MENU MOBILE HAMBÚRGUER
 function initMobileMenu() {
     const menuToggle = document.getElementById('menu-toggle');
     const navMenu = document.getElementById('nav-menu');
@@ -77,7 +74,6 @@ function initMobileMenu() {
 }
 
 //SELEÇÃO DIRETA DE SERVIÇO NA TABELA
-
 function selecionarServico(nomeServico) {
     const selectServico = document.getElementById('servico');
     if (!selectServico) return;
@@ -95,8 +91,7 @@ function selecionarServico(nomeServico) {
     }
 }
 
-//   DEFINIR DATA MÍNIMA COMO HOJE NO CAMPO DE DATA
-   
+// DEFINIR DATA MÍNIMA COMO HOJE NO CAMPO DE DATA
 function initMinDate() {
     const dateInput = document.getElementById('data');
     if (dateInput) {
@@ -105,8 +100,7 @@ function initMinDate() {
     }
 }
 
-   //PROCESSAMENTO DO AGENDAMENTO E MODAL
-    
+//PROCESSAMENTO DO AGENDAMENTO E MODAL
 async function processarAgendamento(e) {
     e.preventDefault();
 
@@ -127,7 +121,7 @@ async function processarAgendamento(e) {
     btnSubmit.disabled = true;
 
     try {
-        // INSERT no banco de dados Supabase
+        // INSERT no banco de dados 
         const { data, error } = await supabaseClient
             .from('agendamentos')
             .insert([
@@ -140,19 +134,17 @@ async function processarAgendamento(e) {
                 }
             ]);
 
-    
-    if (error) {
-        throw error;
-    }
+        if (error) {
+            throw error;
+        }
 
+        const partesData = dataRaw.split('-');
+        const dataFormatada = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
 
-    const partesData = dataRaw.split('-');
-    const dataFormatada = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
-
-    // Atualiza resumo no modal
-    const summaryBox = document.getElementById('modalSummary');
-    summaryBox.innerHTML = `
-        <p><strong>Nome:</strong> ${nome}</p>
+        // Atualiza resumo no modal
+        const summaryBox = document.getElementById('modalSummary');
+        summaryBox.innerHTML = `
+            <p><strong>Nome:</strong> ${nome}</p>
             <p><strong>Telefone:</strong> ${telefone}</p>
             <p><strong>Serviço:</strong> ${servico}</p>
             <p><strong>Data:</strong> ${dataFormatada}</p>
@@ -161,15 +153,34 @@ async function processarAgendamento(e) {
             <p style="color: #137333; text-align: center;"><strong>✓ Salvo com sucesso no banco de dados!</strong></p>
         `;
 
-
-    const modalFooter = document.querySelector('.modal-footer');
+        // Modifica o footer do modal
+        const modalFooter = document.querySelector('.modal-footer');
         modalFooter.innerHTML = `
-            <button class="btn btn-primary btn-block" onclick="fecharModal(); document.getElementById('appointmentForm').reset();">
+            <button type="button" class="btn btn-primary btn-block" id="btnFecharModal">
                 OK, Entendi
             </button>
         `;
 
-    document.getElementById('bookingModal').classList.add('active');
+        // Adiciona a ação de fechar e limpar o formulário
+        document.getElementById('btnFecharModal').addEventListener('click', () => {
+            fecharModal();
+            document.getElementById('appointmentForm').reset();
+        });
+
+        // Abre o modal
+        document.getElementById('bookingModal').classList.add('active');
+
+    } catch (error) {
+        console.error('Erro ao salvar no Supabase:', error);
+        alert('Ocorreu um erro ao salvar seu agendamento no banco de dados. Tente novamente.');
+    } finally {
+        // Restaura o botão do formulário ao estado normal
+        btnSubmit.innerHTML = textoOriginal;
+        btnSubmit.disabled = false;
+    }
+}
+
+// FUNÇÕES GLOBAIS DO MODAL 
 
 function fecharModal() {
     document.getElementById('bookingModal').classList.remove('active');
@@ -182,31 +193,3 @@ window.addEventListener('click', (e) => {
         fecharModal();
     }
 });
-
-
-
-    } catch (error) {
-        console.error('Erro ao salvar no Supabase:', error);
-        alert('Ocorreu um erro ao salvar seu agendamento no banco de dados. Tente novamente.');
-    } finally {
-        // Restaura o botão do formulário ao estado normal
-        btnSubmit.innerHTML = textoOriginal;
-        btnSubmit.disabled = false;
-    }
-}
-
-
-    // Monta a mensagem para o WhatsApp (Número de Exemplo: 5586999999999)
-    //const whatsappNum = "5586999999999"; 
-    //const textoMsg = `Olá! Gostaria de agendar um horário na barbearia:\n\n` +
-     //                `*Nome:* ${nome}\n` +
-      //               `*Serviço:* ${servico}\n` +
-       //              `*Data:* ${dataFormatada}\n` +
-        //             `*Horário:* ${hora}\n` +
-         //            `*Contato:* ${telefone}`;
-
-    //const whatsappUrl = `https://wa.me/${whatsappNum}?text=${encodeURIComponent(textoMsg)}`;
-    //document.getElementById('whatsappLink').href = whatsappUrl;
-
-
-
